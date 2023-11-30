@@ -25,16 +25,23 @@ $(".btn").click(function() {
     playSound(userChosenColor);
     userClickedPattern.push(userChosenColor);
 
-    console.log(userClickedPattern, gamePattern);
-    
-    if (userClickedPattern.toString() == gamePattern.toString()) {
-        setTimeout(function(){
-            nextSequence();
-        }, 500);
-    } else {
-        $("h1").text("GAME OVER");
+    if (gamePattern.length === userClickedPattern.length) {
+        if (gamePattern.toString() === userClickedPattern.toString()) {
+            userClickedPattern = [];
+            setTimeout(function(){
+                nextSequence();
+            }, 500);
+        } else {
+            let gameOver = new Audio("./sounds/wrong.mp3");
+            gameOver.play();
+            $("h1").text("GAME OVER");
+            setTimeout(function(){
+                location.reload();
+            }, 5000);
+        }
     }
 });
+
 
 function playSound(name) {
     $(`#${name}`).fadeIn(100).fadeOut(100).fadeIn(100);
