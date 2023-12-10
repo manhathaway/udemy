@@ -14,7 +14,7 @@ app.get("/", (req, res) => {
 });
 
 app.post("/submit", (req, res) => {
-  res.send("<h1>Your band name is:</h1>" + req.body.street + req.body.pet);
+  res.send(`<h1>Your band name is: ${req.body.street + req.body.pet}.</h1>`);
 })
 
 app.listen(port, () => {
