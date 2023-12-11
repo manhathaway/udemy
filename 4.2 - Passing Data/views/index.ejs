@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Name Letters</title>
+</head>
+
+<body>
+  <% if (locals.firstName && locals.lastName) { %>
+    <h1>There are <%= firstName.length + lastName.length %> letters in your full name.</h1>
+  <% } else if (locals.firstName || locals.lastName) { %>
+    <% if (locals.firstName) { %>
+    <h1>Missing last name.</h1>
+    <% } else { %>
+    <h1>Missing first name.</h1>
+    <% }; %>
+  <% } else { %>
+    <h1>Write your full name in the two inputs below.</h1>
+  <% }; %>
+
+  <form action="/submit" method="POST">
+    <input type="text" name="fName" placeholder="First name">
+    <input type="text" name="lName" placeholder="Last name">
+    <input type="submit" value="OK">
+  </form>
+</body>
+
+</html>
