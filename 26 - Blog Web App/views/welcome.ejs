@@ -1,0 +1,13 @@
+<%- include("partials/head.ejs") %>
+
+<div class="container d-flex flex-column justify-content-center align-items-center" style="height: 100svh">
+    <div class="mb-4">
+        <h1 class="text-center display-1">👋</h1>
+        <h1 class="display-6">Please enter your name. 👇</h1>
+    </div>
+
+    <form class="row input-group" action="/main" method="POST">
+        <input class="col-11 form-control" type="text" name="name" value="">
+        <input class="col-1 btn btn-primary" type="submit" value="🡆">
+    </form>
+</div>
