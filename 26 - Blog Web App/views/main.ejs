@@ -1,20 +1,39 @@
 <%- include("partials/head.ejs") %>
 
 <div class="d-flex container">
-    <div class="px-md-4 px-sm-2 px-1 col-6 d-flex flex-column justify-content-center" style="height: 100svh; border-right: 1px solid rgba(33, 37, 41, 0.25)">
-        <h1 class="display-4 text-end">Welcome, <%= name %>. 👋</h1>
-        <p class="fs-3 text-end text-muted">Please feel free to write a blog post below.</p>
+  <div
+    class="px-md-4 px-sm-2 px-1 col-6 d-flex flex-column justify-content-center"
+    style="height: 100svh"
+  >
+    <% if (locals.name) { %>
+    <h1 class="display-4 text-start">Welcome, <%= locals.name %>. 👋</h1>
+    <% } else { %>
+    <h1 class="display-4 text-start">🔥post bro! Let's hear another.</h1>
+    <% } %>
+    <p class="lead text-start text-muted">
+      Please feel free to write a blog post below.
+    </p>
 
-        <form class="input-group" action="/blogged" method="POST">
-            <textarea class="col-md-11 form-control" name="blogPost" rows="3" placeholder="What's on your mind?"></textarea>
-            <input class="col-md-1 btn btn-primary" type="submit" value="🡆">
-        </form>
-    </div>
-    <div class="mx-md-4 mx-sm-2 mx-1 col-6">
-        <% if (locals.blogPost) { %>
-            <p> <%= blog %> </p>
-        <% } else { %>
-            <p>Your blogs will appear here.</p>
-        <% } %>
-    </div>
+    <form class="input-group" action="/blogged" method="POST">
+      <textarea
+        class="col-md-11 form-control"
+        name="blogPost"
+        rows="3"
+        placeholder="What's on your mind?"
+      ></textarea>
+      <input class="col-md-1 btn btn-primary" type="submit" value="🡆" />
+    </form>
+  </div>
+  <div
+    class="mx-md-4 py-md-4 mx-sm-2 py-md-4 mx-1 col-6 bg-light"
+    style="height: 100svh; overflow-y: auto"
+  >
+    <% if (locals.blogs) { %> <% blogs.forEach((blog) => { %>
+    <p class="mx-4 p-4 bg-primary rounded-3 text-light"><%= blog %></p>
+    <% }); %> <% } else { %>
+    <p class="mx-4 p-4 border border-dark rounded-3 text-dark">
+      Your blogs will appear here.
+    </p>
+    <% } %>
+  </div>
 </div>

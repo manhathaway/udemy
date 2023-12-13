@@ -17,9 +17,12 @@ app.post("/main", (req, res) => {
     });
 });
 
+let blogs = [];
+
 app.post("/blogged", (req, res) => {
+    blogs.push(req.body.blogPost);
     res.render("main.ejs", {
-        blog: req.body.blogPost
+        blogs
     });
 });
 
