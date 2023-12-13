@@ -7,12 +7,11 @@
   >
     <% if (locals.name) { %>
     <h1 class="display-4 text-start">Welcome, <%= locals.name %>. 👋</h1>
+    <p class="lead text-start text-muted">Please feel free to write a blog post below.</p>
     <% } else { %>
     <h1 class="display-4 text-start">🔥post bro! Let's hear another.</h1>
+    <p class="lead text-start text-muted">Write another blog post below.</p>
     <% } %>
-    <p class="lead text-start text-muted">
-      Please feel free to write a blog post below.
-    </p>
 
     <form class="input-group" action="/blogged" method="POST">
       <textarea
@@ -20,6 +19,7 @@
         name="blogPost"
         rows="3"
         placeholder="What's on your mind?"
+        required
       ></textarea>
       <input class="col-md-1 btn btn-primary" type="submit" value="🡆" />
     </form>
@@ -28,12 +28,13 @@
     class="mx-md-4 py-md-4 mx-sm-2 py-md-4 mx-1 col-6 bg-light"
     style="height: 100svh; overflow-y: auto"
   >
-    <% if (locals.blogs) { %> <% blogs.forEach((blog) => { %>
-    <p class="mx-4 p-4 bg-primary rounded-3 text-light"><%= blog %></p>
-    <% }); %> <% } else { %>
-    <p class="mx-4 p-4 border border-dark rounded-3 text-dark">
-      Your blogs will appear here.
-    </p>
+  
+  <% if (locals.blogs) { %>
+    <% for (let i = 0; i < blogs.length; i++) { %>
+      <p class="mx-4 p-4 bg-primary rounded-3 text-light" id="blog-post-<%= i + 1 %>"><%= blogs[i] %></p>
     <% } %>
+  <% } else { %>
+    <p class="mx-4 p-4 border border-dark rounded-3 text-dark">Your blogs will appear here.</p>
+  <% } %>
   </div>
 </div>
