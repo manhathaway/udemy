@@ -19,11 +19,16 @@ app.post("/main", (req, res) => {
 
 let blogs = [];
 
+function deleteBlog() {
+    console.log("Button Working");
+};
+
 app.post("/blogged", (req, res) => {
     blogs.push(req.body.blogPost);
     res.render("main.ejs", {
-        blogs
-    });
+        blogs,
+        deleteBlog
+    })
 });
 
 app.listen(port, () => {

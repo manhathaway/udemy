@@ -1,8 +1,8 @@
 <%- include("partials/head.ejs") %>
 
-<div class="d-flex container">
+<div class="container d-flex">
   <div
-    class="px-md-4 px-sm-2 px-1 col-6 d-flex flex-column justify-content-center"
+    class="col-6 d-flex flex-column justify-content-center px-md-4 px-2"
     style="height: 100svh"
   >
     <% if (locals.name) { %>
@@ -15,26 +15,29 @@
 
     <form class="input-group" action="/blogged" method="POST">
       <textarea
-        class="col-md-11 form-control"
+        class="col-lg-11 col-10 form-control"
         name="blogPost"
         rows="3"
         placeholder="What's on your mind?"
         required
       ></textarea>
-      <input class="col-md-1 btn btn-primary" type="submit" value="🡆" />
+      <input class="col-lg-1 col-2 btn btn-primary" type="submit" value="🡆" />
     </form>
   </div>
   <div
-    class="mx-md-4 py-md-4 mx-sm-2 py-md-4 mx-1 col-6 bg-light"
+    class="col-6 px-md-3 px-2 py-md-4 py-2 bg-light"
     style="height: 100svh; overflow-y: auto"
   >
   
   <% if (locals.blogs) { %>
     <% for (let i = 0; i < blogs.length; i++) { %>
-      <p class="mx-4 p-4 bg-primary rounded-3 text-light" id="blog-post-<%= i + 1 %>"><%= blogs[i] %></p>
+      <div class="container d-flex justify-content-center gap-2" id="blog-post-<%= i + 1 %>">
+        <p class="col-lg-11 col-md-10 col-9 p-3 rounded-3 bg-primary text-light"><%= blogs[i] %></p>
+        <button class="col-lg-1 col-md-2 col-3 mb-3 btn btn-danger color-light" type="button" onclick=<% deleteBlog> %>>✕</button>
+      </div>
     <% } %>
   <% } else { %>
-    <p class="mx-4 p-4 border border-dark rounded-3 text-dark">Your blogs will appear here.</p>
+    <p class="p-3 border rounded-3 border-dark text-dark">Your blogs will appear here.</p>
   <% } %>
   </div>
 </div>
