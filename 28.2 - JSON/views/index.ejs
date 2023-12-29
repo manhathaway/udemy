@@ -19,22 +19,25 @@
   </form>
 
   <div id="recipeContainer" class="hidden">
-    <% if (locals.choice) { %>
-      <% const recipe = recipes.find(x => x.name === `${choice.charAt(0).toUpperCase() + choice.slice(1)} Taco`); %>
+    <% if (locals.recipe) { %>
       <h1 id="recipeTitle"><%= recipe.name %></h1>
       <h3>Ingredients:</h3>
       <ul id="ingredientsList">
         <% const firstLetter = (name) => { return name.charAt(0) + name.slice(1).toLowerCase() }; %>
-        <% const protein = recipe.ingredients.protein.name.toLowerCase(); %>
-        <% const preparation = firstLetter(recipe.ingredients.protein.preparation); %>
-        <li><%= `${preparation} ${protein}.` %></li>
-        <% const salsa = firstLetter(recipe.ingredients.salsa.name); %>
-        <% const spice = recipe.ingredients.salsa.spiciness.toLowerCase(); %>
-        <li><%= `${salsa} (${spice}).` %></li>
+        
+        <% const protein = recipe.ingredients.protein.name; %>
+        <% const preparation = recipe.ingredients.protein.preparation; %>
+        <% const salsa = recipe.ingredients.salsa.name; %>
+        <% const spice = recipe.ingredients.salsa.spiciness; %>
+
+        <li><%= `${firstLetter(preparation)} ${protein.toLowerCase()}.` %></li>
+        <li><%= `${firstLetter(salsa)} (${spice.toLowerCase()}).` %></li>
+
         <% for (let i = 0; i < recipe.ingredients.toppings.length; i++) { %>
-          <% const topping = firstLetter(recipe.ingredients.toppings[i].name) %>
-          <% const quantity = recipe.ingredients.toppings[i].quantity %>
-          <li><%= `${topping} (${quantity}).` %></li>
+          <% const topping = recipe.ingredients.toppings[i].name; %>
+          <% const quantity = recipe.ingredients.toppings[i].quantity; %>
+          
+          <li><%= `${firstLetter(topping)} (${quantity.toLowerCase()}).` %></li>
         <% }; %>
       </ul>
     <% } else { %>

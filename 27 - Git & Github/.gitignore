@@ -1,0 +1,4 @@
+# This is a comment, and I'm ignoring the file below.
+git_demo_clone/
+
+# Wild cards ignore all files with the extension. => *.txt
