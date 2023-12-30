@@ -1,0 +1,62 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+  }
+
+button {
+  padding: 15px 30px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+}
+
+#button-container {
+  display: flex;
+  gap: 25px;
+  margin-bottom: 50px;
+}
+
+#noAuth {
+  background-color: #3498db;
+}
+
+#basicAuth {
+  background-color: #2ecc71;
+}
+
+#apiKey {
+  background-color: #f1c40f;
+}
+
+#bearerToken {
+  background-color: #e74c3c;
+}
+
+.response-area {
+  background-color: white;
+  padding: 50px;
+  width: 750px;
+}
+
+.content {
+  height: 175px;
+}
+
+.response-grid {
+  display: grid;
+  grid-template-rows: 575px fit-content(100%);
+}
+
+#page-controls {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  justify-content: center;
+}

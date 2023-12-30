@@ -7,18 +7,17 @@ const API_URL = "https://secrets-api.appbrewery.com/";
 let content;
 let counter = 1;
 
+app.use(express.static("public"));
+
 app.get("/", (req, res) => {
-  if (content) {
+  try {
     res.render("index.ejs", {
-      content: content.data,
+      content: content,
       counter: counter
     });
-  } else {
-    res.render("index.ejs", {
-      content: "API Response.",
-      counter: counter
-    });
-  };
+  } catch(error) {
+    console.log(error.message);
+  }
 });
 
 app.get("/noAuth", async (req, res) => {
