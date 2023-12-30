@@ -12,47 +12,78 @@
   <div id="button-container">
     <button type="submit" id="noAuth" onclick="window.location.href='/noAuth'">Random</button>
     <button type="submit" id="bearerToken" onclick="window.location.href='/bearerToken'">Specific</button>
-    <button type="submit" id="basicAuth" onclick="window.location.href='/basicAuth'">Page</button>
-    <button type="submit" id="apiKey" onclick="window.location.href='/apiKey'">Filter</button>
+    <button type="submit" id="basicAuth" onclick="window.location.href='/page'">Page</button>
+    <button type="submit" id="apiKey" onclick="window.location.href='/filter'">Filter</button>
   </div>
 
   <div class="response-area">
     <% if (locals.content) { %>
       <% content = content.data; %>
+      
+      <% const format = (string, end) => { %>
+        <% if (string[0] == '0') { %>
+          <% return string.slice(1, end); %>
+        <% } else { %>
+          <% return string.slice(0, end); %>
+        <% } %>
+      <% } %>
+      
+      <% const formatDate = (timestamp) => { %>
+        <% const timestampArr = timestamp.split(' '); %>
+        <% const dateArr = timestampArr[0].split('-'); %>
+        <% return format([dateArr[1], dateArr[2], dateArr[0]].join(' / ')); %>
+      <% } %>
+
+      <% const formatTime = (timestamp) => { %>
+        <% const timestampArr = timestamp.split(' '); %>
+        <% const timeStr = timestampArr[1]; %>
+        <% return format(timeStr, 5); %>
+      <% } %>
+
       <% if (typeof content.length !== 'number') { %>
-        <div class="content">
+        <div class="entry">
           <h1><%= content.username %></h1>
           <div class="stats">
-            <p><%= content.timestamp %></p>
-            <p><%= content.emScore %></p>
+            <div class="timestamp">
+              <p class="date"><%= formatDate(content.timestamp); %></p>
+              <p class="dash">-</p>
+              <p class="time"><%= formatTime(content.timestamp); %></p>
+            </div>
+            <p>Score: <%= content.emScore %></p>
           </div>
           <p><%= content.secret %></p>
         </div>
       <% } else { %>
         <div class="response-grid">
-          <div>
+          <div class="entries">
             <% for (let i = 3 * (counter - 1); i < content.length; i++) { %>
               <% if (i < 3 * counter) { %>
-                  <h1><%= content[i].username %></h1>
-                  <div class="stats">
-                    <p><%= content[i].timestamp %></p>
-                    <p><%= content[i].emScore %></p>
+                  <div class="entry">
+                    <h1><%= content[i].username %></h1>
+                    <div class="stats">
+                      <div class="timestamp">
+                        <p class="date"><%= formatDate(content[i].timestamp) %></p>
+                        <p class="dash">-</p>
+                        <p class="time"><%= formatTime(content[i].timestamp) %></p>
+                      </div>
+                      <p>Score: <%= content[i].emScore %></p>
+                    </div>
+                    <p><%= content[i].secret %></p>
                   </div>
-                  <p><%= content[i].secret %></p>
               <% } %>
             <% } %>
           </div>
           <div id="page-controls">
             <% if (counter > 1) { %>
-              <button type="submit" class="change-page" onclick="window.location.href='/prevPage'">Prev</button>
+              <button type="submit" class="change-page" onclick="window.location.href='/prevPage'">Prev.</button>
             <% } else { %>
-              <button type="submit" class="change-page" disabled>Prev</button>
+              <button type="submit" class="change-page-inactive" disabled>Prev.</button>
             <% } %>
             <p><%= counter %></p>
             <% if (content.length - (3 * counter) > 0) { %>
               <button type="submit" class="change-page" onclick="window.location.href='/nextPage'">Next</button>
             <% } else { %>
-              <button type="submit" class="change-page" disabled>Next</button>
+              <button type="submit" class="change-page-inactive" disabled>Next</button>
             <% } %>
           </div>
         </div>

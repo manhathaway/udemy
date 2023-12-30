@@ -27,7 +27,6 @@ app.get("/noAuth", async (req, res) => {
 });
 
 app.get("/basicAuth", async (req, res) => {
-
   content = await axios.get(API_URL + "all", {
       auth: {
         username: "puccino",
@@ -39,18 +38,6 @@ app.get("/basicAuth", async (req, res) => {
   });
 
   res.redirect("/");
-});
-
-app.get("/prevPage", (req, res) => {
-  counter = counter - 1;
-
-  res.redirect("/basicAuth");
-})
-
-app.get("/nextPage", (req, res) => {
-  counter = counter + 1;
-  
-  res.redirect("/basicAuth");
 });
 
 app.get("/apiKey", async (req, res) => {
@@ -71,6 +58,30 @@ app.get("/bearerToken", async (req, res) => {
     }
   });
 
+  res.redirect("/");
+});
+
+app.get("/page", (req, res) => {
+  counter = 1;
+
+  res.redirect("/basicAuth");
+});
+
+app.get("/filter", (req, res) => {
+  counter = 1;
+
+  res.redirect("/apiKey");
+});
+
+app.get("/prevPage", (req, res) => {
+  counter = counter - 1;
+
+  res.redirect("/");
+})
+
+app.get("/nextPage", (req, res) => {
+  counter = counter + 1;
+  
   res.redirect("/");
 });
 

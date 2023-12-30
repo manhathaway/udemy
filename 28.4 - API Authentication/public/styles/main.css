@@ -1,18 +1,24 @@
 body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100svh;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+}
+
+body * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 button {
   padding: 15px 30px;
   font-size: 16px;
   border: none;
-  border-radius: 5px;
   color: white;
   cursor: pointer;
 }
@@ -45,13 +51,40 @@ button {
   width: 750px;
 }
 
-.content {
-  height: 175px;
-}
-
 .response-grid {
   display: grid;
-  grid-template-rows: 575px fit-content(100%);
+  grid-template-rows: 600px fit-content(100%);
+}
+
+.entries {
+  display: flex;
+  flex-direction: column;
+  gap: 35px;
+}
+
+.entry {
+  border: 1.5px solid rgb(245, 245, 245);
+  padding: 15px;
+}
+
+.entry > h1 {
+  margin-bottom: 5px;
+}
+
+.stats {
+  display: flex;
+  gap: 50px;
+  margin-bottom: 25px;
+  color: rgb(150, 150, 150);
+}
+
+.timestamp {
+  display: flex;
+  gap: 10px;
+}
+
+.entry > p {
+  font-size: 20px;
 }
 
 #page-controls {
@@ -59,4 +92,13 @@ button {
   gap: 15px;
   align-items: center;
   justify-content: center;
+}
+
+.change-page {
+  background-color: black;
+}
+
+.change-page-inactive {
+  background-color: rgb(199, 199, 199);
+  cursor: unset;
 }
