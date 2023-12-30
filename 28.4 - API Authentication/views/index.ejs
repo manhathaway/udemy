@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Express App</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+    }
+
+    button {
+      margin: 10px;
+      padding: 15px 30px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      cursor: pointer;
+    }
+
+    #button-container {
+      display: flex;
+    }
+
+    #noAuth {
+      background-color: #3498db;
+    }
+
+    #basicAuth {
+      background-color: #2ecc71;
+    }
+
+    #apiKey {
+      background-color: #f1c40f;
+    }
+
+    #bearerToken {
+      background-color: #e74c3c;
+    }
+
+    .response-area {
+      margin-top: 20px;
+      background-color: white;
+      padding: 20px;
+    }
+
+    .stats {
+      display: flex;
+      gap: 10px;
+    }
+
+    #page-controls {
+      display: flex;
+      align-items: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="button-container">
+    <button type="submit" id="noAuth" onclick="window.location.href='/noAuth'">Random</button>
+    <button type="submit" id="bearerToken" onclick="window.location.href='/bearerToken'">Specific</button>
+    <button type="submit" id="basicAuth" onclick="window.location.href='/basicAuth'">Page</button>
+    <button type="submit" id="apiKey" onclick="window.location.href='/apiKey'">Filter</button>
+  </div>
+
+  <div class="response-area">
+    <div>
+      <% if (typeof content.length !== 'number') { %>
+        <h1><%= content.username %></h1>
+        <div class="stats">
+          <p><%= content.timestamp %></p>
+          <p><%= content.emScore %></p>
+        </div>
+        <p><%= content.secret %></p>
+      <% } else { %>
+        <% for (let i = 0; i < content.length; i++) { %>
+          <% if (i < 3 * counter) { %>
+            <h1><%= content[i].username %></h1>
+            <div class="stats">
+              <p><%= content[i].timestamp %></p>
+              <p><%= content[i].emScore %></p>
+            </div>
+            <p><%= content[i].secret %></p>
+          <% } %>
+          <% i + 3 %>
+        <% } %>
+        <div id="page-controls">
+          <% if (counter > 1) { %>
+            <button type="submit" class="change-page" onclick="window.location.href='/prevPage'">Prev</button>
+          <% } else { %>
+            <button type="submit" class="change-page" disabled>Prev</button>
+          <% } %>
+          <p><%= counter %></p>
+          <% if (counter < content.length / 3) { %>
+            <button type="submit" class="change-page" onclick="window.location.href='/nextPage'">Next</button>
+          <% } else { %>
+            <button type="submit" class="change-page" disabled>Next</button>
+          <% } %>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</body>
+
+</html>
