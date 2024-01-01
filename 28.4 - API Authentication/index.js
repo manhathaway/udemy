@@ -1,49 +1,50 @@
 import express from "express";
+import bodyParser from "body-parser";
 import axios from "axios";
 
 const app = express();
 const port = 3000;
 const API_URL = "https://secrets-api.appbrewery.com/";
+
+let type;
 let content;
+let border;
 let counter = 1;
+let index = 0;
+
+let filterType = null;
+let embarassingScore = null;
+let date = null;
 
 app.use(express.static("public"));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
-  try {
-    res.render("index.ejs", {
-      content: content,
-      counter: counter
-    });
-  } catch(error) {
-    console.log(error.message);
-  }
+  res.render("index.ejs", {
+    type: type,
+    content: content,
+    border: border,
+    filterType: filterType,
+    embarassingScore: embarassingScore,
+    date: date,
+    counter: counter,
+    index: index
+  });
 });
 
-app.get("/noAuth", async (req, res) => {
+app.get("/random", async (req, res) => {
+  type = 'random';
+  border = "border-bottom: 10px solid #4EB8FF";
   content = await axios.get(API_URL + "random");
 
   res.redirect("/");
 });
 
-app.get("/basicAuth", async (req, res) => {
-  content = await axios.get(API_URL + "all", {
-      auth: {
-        username: "puccino",
-        password: "puccinozione",
-      },
-      params: {
-        page: 1
-      }
-  });
-
-  res.redirect("/");
-});
-
-app.get("/apiKey", async (req, res) => {
+app.get("/all", async (req, res) => {
+  type = 'filter';
+  border = "border-bottom: 10px solid #2CEB7D";
   content = await axios.get(API_URL + "filter", {
     params: {
-      score: 5,
       apiKey: "c4f8a446-a492-4065-916a-5282f4a2c8e6"
     }
   });
@@ -51,26 +52,50 @@ app.get("/apiKey", async (req, res) => {
   res.redirect("/");
 });
 
-app.get("/bearerToken", async (req, res) => {
-  content = await axios.get(API_URL + "secrets/42", {
-    headers: {
-      Authorization: "Bearer 45d01428-ec29-47d6-9d3c-82658ebdd0a5"
-    }
-  });
+app.get("/all_clear", (req, res) => {
+  counter = 1;
+  index = 0;
 
-  res.redirect("/");
+  filterType = null;
+  embarassingScore = null;
+  date = null;
+
+  res.redirect("/all");
+})
+
+app.post("/all_filter", (req, res) => {
+  counter = 1;
+  index = 0;
+
+  if (req.body.embarassingScore) {
+    embarassingScore = req.body.embarassingScore;
+  } else if (req.body.date) {
+    date = req.body.date;
+  } else {
+    console.log('[More Filters]');
+  }
+
+  res.redirect("/all");
 });
 
-app.get("/page", (req, res) => {
-  counter = 1;
+app.post("/all_filter_select", (req, res) => {
+  index = 0;
+  
+  filterType = req.body.filterType;
 
-  res.redirect("/basicAuth");
+  res.redirect("/all");
 });
 
-app.get("/filter", (req, res) => {
-  counter = 1;
+app.get("/decrement", (req, res) => {
+  index = index - 1;
 
-  res.redirect("/apiKey");
+  res.redirect("/all");
+});
+
+app.get("/increment", (req, res) => {
+  index = index + 1;
+
+  res.redirect("/all");
 });
 
 app.get("/prevPage", (req, res) => {

@@ -15,51 +15,90 @@ body * {
   box-sizing: border-box;
 }
 
-button {
-  padding: 15px 30px;
+select, input {
+  height: 48px;
+  border: 3px solid black;
+  padding: 0 5px;
+}
+
+button, .button {
+  padding: 15px 0;
   font-size: 16px;
   border: none;
   color: white;
   cursor: pointer;
+  background-color: black;
+}
+
+.wide {
+  width: 100px;
+}
+
+.normal {
+  width: 75px;
+}
+
+.narrow {
+  width: 50px;
+}
+
+.inactive {
+  background-color: rgb(199, 199, 199);
+  cursor: unset;
 }
 
 #button-container {
+  max-width: 750px;
   display: flex;
-  gap: 25px;
-  margin-bottom: 50px;
 }
 
-#noAuth {
+#button-container,
+#button-container * {
+  width: 100%;
+}
+
+#random {
   background-color: #3498db;
 }
 
-#basicAuth {
+#all {
   background-color: #2ecc71;
 }
 
-#apiKey {
-  background-color: #f1c40f;
-}
-
-#bearerToken {
-  background-color: #e74c3c;
-}
-
-.response-area {
+#response-area {
   background-color: white;
   padding: 50px;
-  width: 750px;
+  max-width: 750px;
 }
 
-.response-grid {
+#response-grid {
   display: grid;
-  grid-template-rows: 600px fit-content(100%);
+  gap: 30px;
 }
 
-.entries {
+#entries_amount {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+#entries {
   display: flex;
   flex-direction: column;
-  gap: 35px;
+  gap: 20px;
+}
+
+.stats {
+  display: flex;
+  gap: 50px;
+  margin-bottom: 15px;
+  color: rgb(150, 150, 150);
+  padding-bottom: 5px;
+  border-bottom: 1px solid rgb(225, 225, 225);
+}
+
+.timestamp {
+  display: flex;
+  gap: 10px;
 }
 
 .entry {
@@ -71,34 +110,70 @@ button {
   margin-bottom: 5px;
 }
 
-.stats {
-  display: flex;
-  gap: 50px;
-  margin-bottom: 25px;
-  color: rgb(150, 150, 150);
-}
-
-.timestamp {
-  display: flex;
-  gap: 10px;
-}
-
 .entry > p {
   font-size: 20px;
 }
 
+#controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#button-random {
+  width: 100%;
+}
+
+.controls-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.controls-label {
+  font-size: 16px;
+  color:rgb(199, 199, 199);
+}
+
 #page-controls {
   display: flex;
-  gap: 15px;
+  gap: 10px;
   align-items: center;
-  justify-content: center;
 }
 
-.change-page {
-  background-color: black;
+#counter {
+  width: 20px;
+  text-align: center;
 }
 
-.change-page-inactive {
-  background-color: rgb(199, 199, 199);
-  cursor: unset;
+#filter-submit {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+#filter-input {
+  padding-left: 15px;
+  width: 80px;
+}
+
+#filter-select-input {
+  width: 140px;
+}
+
+@media screen and (max-width: 750px) {
+  #response-area {
+    padding: 25px;
+  }
+  
+  #controls {
+    flex-direction: column;
+  }
+}
+
+@media screen and (max-height: 1100px) {
+  #button-container {
+    gap: 0;
+    margin-bottom: 0;
+  }
 }

@@ -10,16 +10,14 @@
 
 <body>
   <div id="button-container">
-    <button type="submit" id="noAuth" onclick="window.location.href='/noAuth'">Random</button>
-    <button type="submit" id="bearerToken" onclick="window.location.href='/bearerToken'">Specific</button>
-    <button type="submit" id="basicAuth" onclick="window.location.href='/page'">Page</button>
-    <button type="submit" id="apiKey" onclick="window.location.href='/filter'">Filter</button>
+    <button type="submit" id="random" class="wide" <% if (type == 'random') { %> style = "<%= border %>" <% } %> onclick="window.location.href='/random'">Random</button>
+    <button type="submit" id="all" class="wide" <% if (type == 'filter') { %> style = "<%= border %>" <% } %> onclick="window.location.href='/all'">All</button>
   </div>
 
-  <div class="response-area">
+  <div id="response-area">
     <% if (locals.content) { %>
-      <% content = content.data; %>
       
+      <!-- Removes unnecessary zeros in timestamp. -->
       <% const format = (string, end) => { %>
         <% if (string[0] == '0') { %>
           <% return string.slice(1, end); %>
@@ -28,34 +26,68 @@
         <% } %>
       <% } %>
       
+      <!-- Rearranges the date in timestamp. -->
       <% const formatDate = (timestamp) => { %>
         <% const timestampArr = timestamp.split(' '); %>
         <% const dateArr = timestampArr[0].split('-'); %>
         <% return format([dateArr[1], dateArr[2], dateArr[0]].join(' / ')); %>
       <% } %>
 
+      <!-- Returns only the hour and minutes in timestamp. -->
       <% const formatTime = (timestamp) => { %>
         <% const timestampArr = timestamp.split(' '); %>
         <% const timeStr = timestampArr[1]; %>
         <% return format(timeStr, 5); %>
       <% } %>
 
-      <% if (typeof content.length !== 'number') { %>
-        <div class="entry">
-          <h1><%= content.username %></h1>
-          <div class="stats">
-            <div class="timestamp">
-              <p class="date"><%= formatDate(content.timestamp); %></p>
-              <p class="dash">-</p>
-              <p class="time"><%= formatTime(content.timestamp); %></p>
+      <!-- If 'Random' tab is selected. -->
+      <% if (type == 'random') { %>
+        <% content = content.data %>
+        <div id="response-grid">
+          <div>
+            <div class="entry">
+              <h1><%= content.username %></h1>
+              <div class="stats">
+                <div class="timestamp">
+                  <p class="date"><%= formatDate(content.timestamp); %></p>
+                  <p class="dash">-</p>
+                  <p class="time"><%= formatTime(content.timestamp); %></p>
+                </div>
+                <p>Score: <%= content.emScore %></p>
+              </div>
+              <p><%= content.secret %></p>
             </div>
-            <p>Score: <%= content.emScore %></p>
           </div>
-          <p><%= content.secret %></p>
+          <div id="controls">
+            <button id="button-random" class="wide" type="submit" onclick="window.location.href='/random'">Regenerate</button>
+          </div>
         </div>
+
+      <!-- If 'All' tab is selected. -->
       <% } else { %>
-        <div class="response-grid">
-          <div class="entries">
+        <% content = content.data; %>
+        <!-- If 'Embarassing Score' filter is applied. -->
+        <% if (embarassingScore != null || date != null) { %>
+          <% let filteredContent = []; %>
+          <% for (let i = 0; i < content.length; i++) { %>
+            <% if (embarassingScore != null) { %>
+              <% if (content[i].emScore == embarassingScore) { %>
+                <% filteredContent.push(content[i]); %>
+              <% } %>
+            <% } else if (date != null) { %>
+              <% if (formatDate(content[i].timestamp).slice(0, 6) == date) { %>
+                <% filteredContent.push(content[i]); %>
+              <% } %>
+            <% } else { %>
+              <% console.log("Something"); %>
+            <% } %>
+          <% } %>
+        <% content = filteredContent; %>
+        <% } %>
+
+        <h1 id="entries_amount">Entries: <%= content.length %></h1>
+        <div id="response-grid">
+          <div id="entries">
             <% for (let i = 3 * (counter - 1); i < content.length; i++) { %>
               <% if (i < 3 * counter) { %>
                   <div class="entry">
@@ -73,18 +105,83 @@
               <% } %>
             <% } %>
           </div>
-          <div id="page-controls">
-            <% if (counter > 1) { %>
-              <button type="submit" class="change-page" onclick="window.location.href='/prevPage'">Prev.</button>
-            <% } else { %>
-              <button type="submit" class="change-page-inactive" disabled>Prev.</button>
-            <% } %>
-            <p><%= counter %></p>
-            <% if (content.length - (3 * counter) > 0) { %>
-              <button type="submit" class="change-page" onclick="window.location.href='/nextPage'">Next</button>
-            <% } else { %>
-              <button type="submit" class="change-page-inactive" disabled>Next</button>
-            <% } %>
+
+          <div id="controls">
+            <!-- Controls clicking through the pages. -->
+            <div class="controls-container">
+              <p class="controls-label">Page:</p>
+              <div id="page-controls">
+                <% if (counter > 1) { %>
+                  <button type="submit" class="narrow" onclick="window.location.href='/prevPage'">◀</button>
+                <% } else { %>
+                  <button type="submit" class="narrow inactive" disabled>◀</button>
+                <% } %>
+                <p id="counter"><%= counter %></p>
+                <% if (content.length - (3 * counter) > 0) { %>
+                  <button type="submit" class="narrow" onclick="window.location.href='/nextPage'">▶</button>
+                <% } else { %>
+                  <button type="submit" class="narrow inactive" disabled>▶</button>
+                <% } %>
+              </div>
+            </div>
+
+            <!-- If filter-select form is submitted. -->
+            <div class="controls-container">
+              <p class="controls-label">Filter:</p>
+              <% if (filterType != null) { %>
+                <div id="filter-submit">
+                  <form action="/all_filter" method="POST">
+                    <!-- If 'Embarassing Score' is submitted. -->
+                    <% if (filterType == 'Embarassing Score') { %>
+                      <input id="filter-input" type="number" min="2" max="8" name="embarassingScore" placeholder="Score">
+                    
+                    <!-- If 'Date' is submitted. -->
+                    <% } else if (filterType == 'Date') { %>
+                      <% const dates = ['6 / 25', '6 / 26', '6 / 27']; %>
+                      <% if (index > 0) { %>
+                        <input type="button" class="button narrow" onclick="window.location.href='/decrement'" value="◀">
+                      <% } else { %>
+                        <input type="button" class="button narrow inactive" value="◀" disabled>
+                      <% } %>
+                      <% if (index < dates.length - 1) { %>
+                        <input type="button" class="button narrow" onclick="window.location.href='/increment'" value="▶">
+                      <% } else { %>
+                        <input type="button" class="button narrow inactive" value="▶" disabled>
+                      <% } %>
+                      <input id="filter-input" type="text" name="date" value="<%= dates[index]; %>">
+                    
+                    <!-- Other filters. -->
+                    <% } else { %>
+                      <h1>[Other Filters]</h1>
+                    <% } %>
+  
+                    <input id="filter-button-submit" class="button normal" type="submit" value="Submit">
+                  </form>
+                  <button id="filter-button-clear" class="normal" type="submit" onclick="window.location.href='/all_clear'">Clear</button>
+                </div>
+  
+              <!-- If filter-select form is not submitted (default). -->
+              <% } else { %>
+                <% const filters = ['Embarassing Score', 'Date']; %>
+                <div id="filter-select">
+                  <form action="/all_filter_select" method="POST">
+                    <% if (index > 0) { %>
+                      <input type="button" class="button narrow" onclick="window.location.href='/decrement'" value="◀">
+                    <% } else { %>
+                      <input type="button" class="button narrow inactive" value="◀" disabled>
+                    <% } %>
+                    <% if (index < filters.length - 1) { %>
+                      <input type="button" class="button narrow" onclick="window.location.href='/increment'" value="▶">
+                    <% } else { %>
+                      <input type="button" class="button narrow inactive" value="▶" disabled>
+                    <% } %>
+                    <input id="filter-select-input" type="text" name="filterType" value="<%= filters[index]; %>">
+                    <input id="filter-select-submit" class="button normal" type="submit" value="Sumbit">
+                  </form>
+                </div>
+              <% } %>
+            </div>
+
           </div>
         </div>
       <% } %>
