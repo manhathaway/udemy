@@ -69,6 +69,11 @@ button, .button {
   background-color: white;
   padding: 50px;
   max-width: 750px;
+  width: 100%;
+}
+
+#response-main > h1 {
+  max-width: 750px;
 }
 
 #response-grid {
@@ -165,7 +170,9 @@ button, .button {
   #response-area {
     padding: 25px;
   }
-  
+}
+
+@media screen and (max-width: 575px) {
   #controls {
     flex-direction: column;
   }
