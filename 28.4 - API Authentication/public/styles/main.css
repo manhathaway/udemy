@@ -15,13 +15,15 @@ body * {
   box-sizing: border-box;
 }
 
-select, input {
+select,
+input {
   height: 48px;
   border: 3px solid black;
   padding: 0 5px;
 }
 
-button, .button {
+button,
+.button {
   padding: 15px 0;
   font-size: 16px;
   border: none;
@@ -72,7 +74,7 @@ button, .button {
   width: 100%;
 }
 
-#response-main > h1 {
+#response-main>h1 {
   max-width: 750px;
 }
 
@@ -111,11 +113,11 @@ button, .button {
   padding: 15px;
 }
 
-.entry > h1 {
+.entry>h1 {
   margin-bottom: 5px;
 }
 
-.entry > p {
+.entry>p {
   font-size: 20px;
 }
 
@@ -137,7 +139,7 @@ button, .button {
 
 .controls-label {
   font-size: 16px;
-  color:rgb(199, 199, 199);
+  color: rgb(199, 199, 199);
 }
 
 #page-controls {
@@ -157,13 +159,17 @@ button, .button {
   gap: 5px;
 }
 
+#filter-input,
+#filter-select-input {
+  padding-left: 10px;
+}
+
 #filter-input {
-  padding-left: 15px;
   width: 80px;
 }
 
 #filter-select-input {
-  width: 140px;
+  width: 150px;
 }
 
 @media screen and (max-width: 750px) {

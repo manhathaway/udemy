@@ -65,7 +65,6 @@ app.get("/all_clear", (req, res) => {
 
 app.post("/all_filter", (req, res) => {
   counter = 1;
-  index = 0;
 
   if (req.body.embarassingScore) {
     embarassingScore = req.body.embarassingScore;
@@ -80,7 +79,7 @@ app.post("/all_filter", (req, res) => {
 
 app.post("/all_filter_select", (req, res) => {
   index = 0;
-  
+
   filterType = req.body.filterType;
 
   res.redirect("/all");
@@ -106,7 +105,7 @@ app.get("/prevPage", (req, res) => {
 
 app.get("/nextPage", (req, res) => {
   counter = counter + 1;
-  
+
   res.redirect("/");
 });
 
