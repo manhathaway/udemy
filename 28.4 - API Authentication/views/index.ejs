@@ -5,7 +5,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/styles/main.css">
+  <link rel="icon" href=""/>
   <title>Secrets</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 
 <body>
@@ -40,6 +42,10 @@
         <% return format(timeStr, 5); %>
       <% } %>
 
+      <% const increment = (value) => { %>
+        <% console.log(value + 1); %>
+      <% } %>
+
       <!-- If 'Random' tab is selected. -->
       <% if (type == 'random') { %>
         <% content = content.data %>
@@ -66,14 +72,16 @@
       <!-- If 'All' tab is selected. -->
       <% } else { %>
         <% content = content.data; %>
-        <!-- If 'Embarassing Score' filter is applied. -->
+        <!-- If a filter is applied. -->
         <% if (embarassingScore != null || date != null) { %>
           <% let filteredContent = []; %>
           <% for (let i = 0; i < content.length; i++) { %>
+            <!-- If 'Embarassing Score' filter is applied. -->
             <% if (embarassingScore != null) { %>
               <% if (content[i].emScore == embarassingScore) { %>
                 <% filteredContent.push(content[i]); %>
               <% } %>
+            <!-- If 'Date' filter is applied. -->
             <% } else if (date != null) { %>
               <% if (formatDate(content[i].timestamp).slice(0, 6) == date) { %>
                 <% filteredContent.push(content[i]); %>
@@ -130,6 +138,7 @@
               <p class="controls-label">Filter:</p>
               <% if (filterType != null) { %>
                 <div id="filter-submit">
+                  <button id="filter-button-clear" class="normal" type="submit" onclick="window.location.href='/all_clear'">Clear</button>
                   <form action="/all_filter" method="POST">
                     <!-- If 'Embarassing Score' is submitted. -->
                     <% if (filterType == 'Embarassing Score') { %>
@@ -157,7 +166,6 @@
   
                     <input id="filter-button-submit" class="button normal" type="submit" value="Submit">
                   </form>
-                  <button id="filter-button-clear" class="normal" type="submit" onclick="window.location.href='/all_clear'">Clear</button>
                 </div>
   
               <!-- If filter-select form is not submitted (default). -->
@@ -166,12 +174,12 @@
                 <div id="filter-select">
                   <form action="/all_filter_select" method="POST">
                     <% if (index > 0) { %>
-                      <input type="button" class="button narrow" onclick="window.location.href='/decrement'" value="◀">
+                      <input type="button" id="dec-button" class="button narrow" onclick="window.location.href='/decrement'" value="◀">
                     <% } else { %>
                       <input type="button" class="button narrow inactive" value="◀" disabled>
                     <% } %>
                     <% if (index < filters.length - 1) { %>
-                      <input type="button" class="button narrow" onclick="window.location.href='/increment'" value="▶">
+                      <input type="button" id="inc-button" class="button narrow" onclick="window.location.href='/increment'" value="▶">
                     <% } else { %>
                       <input type="button" class="button narrow inactive" value="▶" disabled>
                     <% } %>
@@ -189,6 +197,9 @@
       <h1 id="welcome-text">Select a button above to reveal secrets.</h1>
     <% } %>
   </div>
-</body>
+
+  <script>
+  </script>
+</body> 
 
 </html>

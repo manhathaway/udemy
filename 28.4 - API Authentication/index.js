@@ -45,7 +45,7 @@ app.get("/all", async (req, res) => {
   border = "border-bottom: 10px solid #2CEB7D";
   content = await axios.get(API_URL + "filter", {
     params: {
-      apiKey: "c4f8a446-a492-4065-916a-5282f4a2c8e6"
+      apiKey: "a09639cb-0252-4c87-88c7-47aa15809011"
     }
   });
 
