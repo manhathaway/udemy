@@ -18,6 +18,5 @@ function fibonacciGenerator(n) {
     }
 }
 
-
 const myElement = document.getElementById("my-element");
 myElement.innerHTML = fibonacciGenerator(20);

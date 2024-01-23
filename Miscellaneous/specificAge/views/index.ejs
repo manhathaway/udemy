@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Specific Age</title>
+</head>
+<body>
+    <h1>Specific Age</h1>
+    <form action="/send-data" method="post">
+        <label for="month">Month:</label>
+        <select type="text" name="month">
+            <option value="January">January</option>
+            <option value="February">February</option>
+            <option value="March">March</option>
+            <option value="April">April</option>
+            <option value="May">May</option>
+            <option value="June">June</option>
+            <option value="July">July</option>
+            <option value="August">August</option>
+            <option value="September">September</option>
+            <option value="October">October</option>
+            <option value="November">November</option>
+            <option value="December">December</option>
+        </select>
+
+        <label for="day">Day:</label>
+        <input type="number" min="1" name="day" value="1" style="width: 88px">
+
+        <label for="year">Year:</label>
+        <input type="number" name="year" value="2000" style="width: 88px">
+
+        <input type="submit" value="Submit">
+    </form>
+    <% if (locals.month && locals.day && locals.year) { %>
+        <h2><%= `${month} ${day}, ${year}` %></h2>
+    <% } %>
+    <h1><%= result %></h1>
+</body>
+</html>
