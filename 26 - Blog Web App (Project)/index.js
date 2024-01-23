@@ -62,7 +62,7 @@ app.get("/blog/edit/:id", (req, res) => {
             name: name,
             blogs: blogs,
             caption: "Let's edit that blog post.",
-            action: `/blog/postEdit/${req.params.id}`,
+            action: `/blog/post_edit/${req.params.id}`,
             buttonColor: "success",
             content: blogs.find(x => x.id == req.params.id).content
         });
@@ -71,7 +71,7 @@ app.get("/blog/edit/:id", (req, res) => {
     };
 });
 
-app.post("/blog/postEdit/:id", (req, res) => {
+app.post("/blog/post_edit/:id", (req, res) => {
     try {
         blogs.find(x => x.id == req.params.id).content = req.body.content;
         blogs.find(x => x.id == req.params.id).time = new Date().toString();
