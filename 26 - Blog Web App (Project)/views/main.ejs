@@ -1,35 +1,35 @@
-<%- include("partials/head.ejs") %>
+<%- include("partials/header.ejs") %>
 
-<div class="container-xl d-flex flex-row">
-  <div class="col-6 d-flex flex-column justify-content-center px-4">
+<div id="page" class="container-xl d-flex flex-row">
+  <div id="left-side" class="col-6 d-flex flex-column justify-content-center px-4">
     <% if (blogs.length == 0) { %>
-    <h1 class="display-4 text-start">Welcome, <%= name %>. 👋</h1>
-    <p class="lead text-start text-muted">Please feel free to write a blog post below.</p>
+      <h1 class="display-4 text-start">Welcome, <%= name %>. 👋</h1>
+      <p class="lead text-start text-muted">Please feel free to write a blog post below.</p>
     <% } else { %>
-    <h1 class="display-4 text-start">🔥post, <%= name %>! Let's hear another.</h1>
-    <p class="lead text-start text-muted"><%= caption %></p>
+      <h1 class="display-4 text-start">🔥post, <%= name %>! Let's hear another.</h1>
+      <p class="lead text-start text-muted"><%= caption %></p>
     <% } %>
 
-    <form class="input-group" action="<%= action %>" method="POST">
+    <form id="form" class="input-group" action="<%= action %>" method="POST">
       <textarea
-        class="col-xl-11 col-lg-10 col-9 form-control"
+        class="form-control"
         name="content"
         rows="3"
         required
       ><%= content %></textarea>
-      <input class="col-xl-1 col-lg-2 col-3 btn btn-<%= buttonColor %>" type="submit" value="🡆" />
+      <input class="btn btn-<%= buttonColor %>" type="submit" value="🡆" />
     </form>
   </div>
 
-  <div class="col-6 row-lg-12 row-9 px-md-3 px-2 py-md-4 py-3 bg-light vh-100 overflow-auto">
+  <div id="right-side" class="col-6 row-lg-12 row-9 px-md-3 px-2 py-md-4 py-3 bg-light vh-100 overflow-auto">
   <% if (blogs.length != 0) { %>
-    <div class="d-flex flex-column gap-2">
+    <div id="blogs" class="d-flex flex-column gap-2">
     <% for (let i = 0; i < blogs.length; i++) { %>
-      <div class="d-flex flex-column gap-1" id="blog-post-<%= blogs[i].id %>">
-        <p class="p-3 m-0 rounded-3 bg-primary text-light" style="word-break: break-all;"><%= blogs[i].content %></p>
-        <div class="d-flex justify-content-between">
-          <p class="ms-2" style="opacity: 35%"><%= blogs[i].edited == true ? "*" : "" %><%= `${blogs[i].time.split(" ")[1]}. ${blogs[i].time.split(" ")[2]}, ${blogs[i].time.split(" ")[4].slice(0, 5)}` %></p>
-          <div class="d-flex flex-row gap-1">
+      <div class="blog d-flex flex-column gap-1">
+        <p class="blog-content p-3 m-0 rounded-3 bg-primary text-light" style="word-break: break-all;"><%= blogs[i].content %></p>
+        <div class="blog-controls d-flex justify-content-between">
+          <p class="timestamp ms-2" style="opacity: 35%"><%= blogs[i].edited == true ? "*" : "" %><%= `${blogs[i].time.split(" ")[1]}. ${blogs[i].time.split(" ")[2]}, ${blogs[i].time.split(" ")[4].slice(0, 5)}` %></p>
+          <div class="options d-flex flex-row gap-1">
             <a href="/blog/edit/<%= blogs[i].id %>" class="btn btn-success d-flex justify-content-center align-items-center" type="submit">✎</a>
             <a href="/blog/delete/<%= blogs[i].id %>" class="btn btn-danger d-flex justify-content-center align-items-center" type="submit">✕</a>
           </div>
@@ -38,7 +38,9 @@
     <% } %>
     </div>  
   <% } else { %>
-    <p class="p-3 text-dark text-center" style="opacity: 50%">Your blogs will appear here.</p>
+    <p id="no-blogs" class="p-3 text-dark text-center" style="opacity: 50%">Your blogs will appear here.</p>
   <% } %>
   </div>
 </div>
+
+<%- include("partials/footer.ejs") %>

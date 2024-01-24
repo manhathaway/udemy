@@ -1,4 +1,4 @@
-<%- include("partials/head.ejs") %>
+<%- include("partials/header.ejs") %>
 
 <div class="container d-flex flex-column justify-content-center align-items-center" style="height: 100svh">
     <div class="mb-4">
@@ -6,8 +6,10 @@
         <h1 class="display-6">Please enter your name. 👇</h1>
     </div>
 
-    <form class="row input-group" action="/main" method="POST">
-        <input class="col-11 form-control" type="text" name="name" value="">
-        <input class="col-1 btn btn-primary" type="submit" value="🡆">
+    <form class="input-group" action="/main" method="POST">
+        <input class="form-control" type="text" name="name" value="">
+        <input class="btn btn-primary" type="submit" value="🡆">
     </form>
 </div>
+
+<%- include("partials/footer.ejs") %>
