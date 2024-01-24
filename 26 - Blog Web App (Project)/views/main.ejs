@@ -10,14 +10,17 @@
       <p class="lead text-start text-muted"><%= caption %></p>
     <% } %>
 
-    <form id="form" class="input-group" action="<%= action %>" method="POST">
+    <form id="form" class="" action="<%= action %>" method="POST">
       <textarea
         class="form-control"
         name="content"
         rows="3"
         required
       ><%= content %></textarea>
-      <input class="btn btn-<%= buttonColor %>" type="submit" value="🡆" />
+      <div class="d-flex gap-2 mt-2">
+        <a href="/index/toggle_options" id="edit-btn" class="edit btn btn-warning w-15" type="button">⚙</a>
+        <input class="btn btn-<%= buttonColor %> w-100" type="submit" value="🡆" />
+      </div>
     </form>
   </div>
 
@@ -29,10 +32,12 @@
         <p class="blog-content p-3 m-0 rounded-3 bg-primary text-light" style="word-break: break-all;"><%= blogs[i].content %></p>
         <div class="blog-controls d-flex justify-content-between">
           <p class="timestamp ms-2" style="opacity: 35%"><%= blogs[i].edited == true ? "*" : "" %><%= `${blogs[i].time.split(" ")[1]}. ${blogs[i].time.split(" ")[2]}, ${blogs[i].time.split(" ")[4].slice(0, 5)}` %></p>
-          <div class="options d-flex flex-row gap-1">
-            <a href="/blog/edit/<%= blogs[i].id %>" class="btn btn-success d-flex justify-content-center align-items-center" type="submit">✎</a>
-            <a href="/blog/delete/<%= blogs[i].id %>" class="btn btn-danger d-flex justify-content-center align-items-center" type="submit">✕</a>
-          </div>
+          <% if (counter) { %>
+            <div class="options d-flex gap-1">
+              <a href="/blog/edit/<%= blogs[i].id %>" class="btn btn-success" type="submit">✎</a>
+              <a href="/blog/delete/<%= blogs[i].id %>" class="btn btn-danger" type="submit">✕</a>
+            </div>
+          <% } %>
         </div>
       </div>
     <% } %>

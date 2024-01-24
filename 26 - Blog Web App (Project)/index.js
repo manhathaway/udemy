@@ -4,11 +4,12 @@ import bodyParser from 'body-parser';
 const app = express();
 const port = 3000;
 
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 let name = "";
 let blogs = [];
+let counter = false;
 
 app.get("/", (req, res) => {
     try {
@@ -35,7 +36,8 @@ app.get("/index", (req, res) => {
             caption: "Write another blog post below.",
             action: "/blog/post",
             buttonColor: "primary",
-            content: "What's on your mind?"
+            content: "What's on your mind?",
+            counter: counter
         });
     } catch (err) {
         res.send(err.message);
@@ -64,7 +66,8 @@ app.get("/blog/edit/:id", (req, res) => {
             caption: "Let's edit that blog post.",
             action: `/blog/post_edit/${req.params.id}`,
             buttonColor: "success",
-            content: blogs.find(x => x.id == req.params.id).content
+            content: blogs.find(x => x.id == req.params.id).content,
+            counter: counter
         });
     } catch (err) {
         res.send(err.message);
@@ -89,6 +92,11 @@ app.get("/blog/delete/:id", (req, res) => {
     } catch (err) {
         res.send(err.message);
     };
+});
+
+app.get("/index/toggle_options", (req, res) => {
+    counter = !counter;
+    res.redirect("/index");
 });
 
 app.listen(port, () => {
