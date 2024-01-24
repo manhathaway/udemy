@@ -10,7 +10,7 @@
       <p class="lead text-start text-muted"><%= caption %></p>
     <% } %>
 
-    <form id="form" class="" action="<%= action %>" method="POST">
+    <form id="form" class="" action="<%= submitAction %>" method="POST">
       <textarea
         class="form-control"
         name="content"
@@ -18,8 +18,8 @@
         required
       ><%= content %></textarea>
       <div class="d-flex gap-2 mt-2">
-        <a href="/index/toggle_options" id="edit-btn" class="edit btn btn-warning w-15" type="button">⚙</a>
-        <input class="btn btn-<%= buttonColor %> w-100" type="submit" value="🡆" />
+        <a href=<%= optionAction %> id="edit-btn" class="edit btn btn-<%= optionColor %>" type="button" style="width: 60px"><%= optionText %></a>
+        <input class="btn btn-<%= submitColor %> w-100" type="submit" value="🡆" />
       </div>
     </form>
   </div>

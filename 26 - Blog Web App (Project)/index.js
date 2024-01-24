@@ -34,10 +34,13 @@ app.get("/index", (req, res) => {
             name: name,
             blogs: blogs,
             caption: "Write another blog post below.",
-            action: "/blog/post",
-            buttonColor: "primary",
+            submitAction: "/blog/post",
+            submitColor: "primary",
             content: "What's on your mind?",
-            counter: counter
+            counter: counter,
+            optionColor: "warning",
+            optionText: "⚙",
+            optionAction: "/index/toggle_options"
         });
     } catch (err) {
         res.send(err.message);
@@ -64,10 +67,13 @@ app.get("/blog/edit/:id", (req, res) => {
             name: name,
             blogs: blogs,
             caption: "Let's edit that blog post.",
-            action: `/blog/post_edit/${req.params.id}`,
-            buttonColor: "success",
+            submitAction: `/blog/post_edit/${req.params.id}`,
+            submitColor: "success",
             content: blogs.find(x => x.id == req.params.id).content,
-            counter: counter
+            counter: counter,
+            optionColor: "danger",
+            optionText: "✕",
+            optionAction: "/index"
         });
     } catch (err) {
         res.send(err.message);
