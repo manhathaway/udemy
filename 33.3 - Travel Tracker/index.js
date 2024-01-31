@@ -5,7 +5,7 @@ import pg from 'pg';
 const app = express();
 const port = 3000;
 let countries = []
-let alert = 'Welcome, this is a place to map out all the countries that you have visited thus far. Enjoy!';
+let error;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
@@ -31,11 +31,10 @@ db.query('SELECT * FROM countries', (err, res) => {
 app.get("/", async (req, res) => {
   try {
     const visited_countries = await db.query('SELECT * FROM visited_countries');
-    console.log(visited_countries.rows);
     res.render("index.ejs", {
       total: visited_countries.rows.length,
       countries: visited_countries.rows.map(country => country.country_code),
-      alert: alert
+      error: error
     });
   } catch (err) {
     console.log("Error at GET request:", err);
@@ -45,15 +44,14 @@ app.get("/", async (req, res) => {
 app.post('/add', async (req, res) => {
   const country = countries.find(country => country.country_name.includes(req.body.country));
 
-  alert = '';
   if (typeof country == 'object') {
     try {
       await db.query(`INSERT INTO visited_countries(country_code) VALUES('${country.country_code}')`);
     } catch (err) {
-      alert = "Country already added.";
+      error = "Country already added.";
     };
   } else {
-    alert = "No such country exists.";
+    error = "No such country exists.";
   };
 
   res.redirect("/");

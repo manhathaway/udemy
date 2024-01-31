@@ -10,7 +10,7 @@
 
 <body>
   <form action="/add" method="post">
-    <input type="text" name="country" autofocus placeholder="Enter a country that you've visited.">
+    <input type="text" name="country" autofocus placeholder="<%= locals.error ? error :  'Enter a country name.'%>">
     <button type="submit">Add</button>
   </form>
 
@@ -374,11 +374,9 @@
   <h2 class="total-count">Total Countries: <%= total %>
   </h2>
   <script>
-    "<%= alert %>" != '' && alert("<%= alert %>");
-    const country_codes = "<%= countries %>".split(",");
-    console.log(country_codes.forEach(code => console.log(code)));
+    const country_codes = "<%= countries %>".split(",") 
     country_codes.forEach(code => {
-      document.getElementById(code).style.fill = 'teal'
+      document.getElementById(code).style.fill = 'teal';
     });
   </script>
 </body>
