@@ -11,7 +11,7 @@
 <body>
   <form class="tab-view tab-view-height-auto" action="/user" method="post">
     <input type="submit" name="user" value="all" id="all">
-    <label for="all" style="background-color: #2e3642; color: white">All</label>
+    <label for="all" style="background-color: #2e3642">All</label>
     
     <% users.forEach((user) => { %>
       <input type="submit" name="user" value="<%= user.id %>" id="<%= user.id %>">
@@ -22,7 +22,7 @@
 
 
     <input type="submit" name="add" value="new" id="new">
-    <label for="new" style="background-color: #2e3642; color: white">Add Family Member</label>
+    <label for="new" style="background-color: #2e3642">Add Family Member</label>
   </form>
 
   <form action="/add" method="post">
