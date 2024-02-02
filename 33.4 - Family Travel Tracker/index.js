@@ -5,6 +5,9 @@ import pg from "pg";
 const app = express();
 const port = 3000;
 
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static("public"));
+
 const db = new pg.Client({
   user: "postgres",
   host: "localhost",
@@ -12,64 +15,86 @@ const db = new pg.Client({
   password: "webdevlife",
   port: 5432,
 });
+
 db.connect();
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static("public"));
+let currentUser;
+let error;
 
-let currentUserId = 1;
-
-let users = [
-  { id: 1, name: "Angela", color: "teal" },
-  { id: 2, name: "Jack", color: "powderblue" },
-];
-
-async function checkVisisted() {
-  const result = await db.query("SELECT country_code FROM visited_countries");
-  let countries = [];
-  result.rows.forEach((country) => {
-    countries.push(country.country_code);
-  });
-  return countries;
-}
 app.get("/", async (req, res) => {
-  const countries = await checkVisisted();
+  const dataRequest = await db.query('SELECT country_code, user_id, name, color FROM visited_countries JOIN users ON users.id = user_id');
+  const data = dataRequest.rows;
+
+  const usersRequest = await db.query('SELECT * FROM users');
+  const users = usersRequest.rows;
+
+  let output;
+  if (typeof currentUser == 'number') {
+    output = data.filter(entry => entry.user_id == currentUser);
+  } else {
+    output = data;
+  };
+
   res.render("index.ejs", {
-    countries: countries,
-    total: countries.length,
+    data_codes: output.map(entry => entry.country_code),
+    data_colors: output.map(entry => entry.color),
+    data_length: output.length,
     users: users,
-    color: "teal",
+    currentUser: currentUser,
+    error: error
   });
 });
+
 app.post("/add", async (req, res) => {
-  const input = req.body["country"];
+  const countriesRequest = await db.query("SELECT country_code FROM countries WHERE LOWER(country_name) LIKE '%' || $1 || '%'", [req.body.country.toLowerCase()]);
+  const countryCode = countriesRequest.rows[0].country_code;
 
-  try {
-    const result = await db.query(
-      "SELECT country_code FROM countries WHERE LOWER(country_name) LIKE '%' || $1 || '%';",
-      [input.toLowerCase()]
-    );
-
-    const data = result.rows[0];
-    const countryCode = data.country_code;
+  if (typeof currentUser == 'number') {
+    error = null;
     try {
       await db.query(
-        "INSERT INTO visited_countries (country_code) VALUES ($1)",
-        [countryCode]
+        "INSERT INTO visited_countries (country_code, user_id) VALUES ($1, $2)",
+        [countryCode, currentUser]
       );
-      res.redirect("/");
     } catch (err) {
-      console.log(err);
-    }
-  } catch (err) {
-    console.log(err);
-  }
+      console.log("Error adding country: ", err);
+    };
+  } else {
+    error = "Select a user to add a country.";
+  };
+
+  res.redirect(`/user/${currentUser}`);
 });
-app.post("/user", async (req, res) => {});
+
+app.post("/user", async (req, res) => {
+  if (req.body.user) {
+    req.body.user == 'all' ?
+      res.redirect('/all') : res.redirect(`/user/${req.body.user}`);
+  } else {
+    res.redirect('/new');
+  };
+});
+
+app.get('/all', (req, res) => {
+  currentUser = null;
+
+  res.redirect('/');
+})
+
+app.get("/user/:id", async (req, res) => {
+  currentUser = parseInt(req.params.id);
+
+  res.redirect('/');
+});
+
+app.get("/new", (req, res) => {
+  res.render('new.ejs');
+});
 
 app.post("/new", async (req, res) => {
-  //Hint: The RETURNING keyword can return the data that was inserted.
-  //https://www.postgresql.org/docs/current/dml-returning.html
+  await db.query('INSERT INTO users (name, color) VALUES ($1, $2)', [req.body.name, req.body.color]);
+
+  res.redirect('/');
 });
 
 app.listen(port, () => {
