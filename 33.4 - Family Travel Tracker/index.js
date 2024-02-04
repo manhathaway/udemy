@@ -20,6 +20,7 @@ db.connect();
 
 let currentUser;
 let error;
+let message = "Add a family member.";
 
 app.get("/", async (req, res) => {
   try {
@@ -50,12 +51,12 @@ app.get("/", async (req, res) => {
         });
       } catch (err) {
         console.log(err);
-        res.send("Couldn't fetch data.");
+        res.send("SQL Error: Couldn't fetch data table.");
       };
     };
   } catch (err) {
     console.log(err);
-    res.send("Couldn't fetch users.");
+    res.send("SQL Error: Couldn't fetch users table.");
   };
 });
 
@@ -63,6 +64,7 @@ app.post("/add", async (req, res) => {
   try {
     const countriesRequest = await db.query("SELECT country_code FROM countries WHERE LOWER(country_name) LIKE '%' || $1 || '%'", [req.body.country.toLowerCase()]);
     const countryCode = countriesRequest.rows[0].country_code;
+    
     if (typeof currentUser == 'number') {
       error = null;
       try {
@@ -109,13 +111,20 @@ app.get("/user/:id", async (req, res) => {
 });
 
 app.get("/new", (req, res) => {
-  res.render('new.ejs');
+  res.render('new.ejs', {
+    message: message
+  });
 });
 
 app.post("/new", async (req, res) => {
-  await db.query('INSERT INTO users (name, color) VALUES ($1, $2)', [req.body.name, req.body.color]);
-
-  res.redirect('/');
+  if (req.body.name && req.body.color) {
+    message = "Add a family member.";
+    await db.query('INSERT INTO users (name, color) VALUES ($1, $2)', [req.body.name, req.body.color]);
+    res.redirect('/');
+  } else {
+    message = "Fields 'name' & 'color' required.";
+    res.redirect('/new');
+  }
 });
 
 app.listen(port, () => {
