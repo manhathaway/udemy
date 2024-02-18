@@ -11,8 +11,11 @@ import env from "dotenv";
 const app = express();
 const port = 3000;
 const saltRounds = 10;
-env.config();
 
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static('public'));
+
+env.config();
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -20,10 +23,6 @@ app.use(
     saveUninitialized: true,
   })
 );
-
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static("public"));
-
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -36,68 +35,76 @@ const db = new pg.Client({
 });
 db.connect();
 
-app.get("/", (req, res) => {
-  res.render("home.ejs");
+app.get('/', (req, res) => {
+  res.render('home.ejs');
 });
 
-app.get("/login", (req, res) => {
-  res.render("login.ejs");
+app.get('/login', (req, res) => {
+  res.render('login.ejs');
 });
 
-app.get("/register", (req, res) => {
-  res.render("register.ejs");
+app.get('/register', (req, res) => {
+  res.render('register.ejs');
 });
 
-app.get("/logout", (req, res) => {
-  req.logout(function (err) {
-    if (err) {
-      return next(err);
-    }
-    res.redirect("/");
+app.get('/logout', (req, res) => {
+  req.logout(err => {
+    err ? console.log(err) : res.redirect('/');
   });
 });
 
-app.get("/secrets", (req, res) => {
-  console.log(req.user);
+app.get('/secrets', (req, res) => {
   if (req.isAuthenticated()) {
-    res.render("secrets.ejs");
+    res.render('secrets.ejs');
   } else {
-    res.redirect("/login");
+    res.redirect('/login');
   }
 });
 
-app.post(
-  "/login",
-  passport.authenticate("local", {
-    successRedirect: "/secrets",
-    failureRedirect: "/login",
+app.get('/auth/google',
+  passport.authenticate('google', {
+  scope: ['profile', 'email']
+  }
+));
+
+app.get('/auth/google/secrets',
+  passport.authenticate('google', {
+    successRedirect: '/secrets',
+    failureRedirect: '/login'
   })
 );
 
-app.post("/register", async (req, res) => {
+app.post('/login',
+  passport.authenticate('local', {
+    successRedirect: '/secrets',
+    failureRedirect: '/login',
+  })
+);
+
+app.post('/register', async (req, res) => {
   const email = req.body.username;
   const password = req.body.password;
 
   try {
-    const checkResult = await db.query("SELECT * FROM users WHERE email = $1", [
-      email,
-    ]);
+    const checkResult = await db.query('SELECT * FROM users WHERE email = $1',
+    [email]
+    );
 
     if (checkResult.rows.length > 0) {
-      req.redirect("/login");
+      req.redirect('/login');
     } else {
       bcrypt.hash(password, saltRounds, async (err, hash) => {
         if (err) {
-          console.error("Error hashing password:", err);
+          console.error('Error hashing password:', err);
         } else {
           const result = await db.query(
-            "INSERT INTO users (email, password) VALUES ($1, $2) RETURNING *",
+            'INSERT INTO users (email, password) VALUES ($1, $2) RETURNING *',
             [email, hash]
           );
           const user = result.rows[0];
           req.login(user, (err) => {
-            console.log("success");
-            res.redirect("/secrets");
+            console.log('success');
+            res.redirect('/secrets');
           });
         }
       });
@@ -108,48 +115,65 @@ app.post("/register", async (req, res) => {
 });
 
 passport.use(
-  new Strategy(async function verify(username, password, cb) {
-    try {
-      const result = await db.query("SELECT * FROM users WHERE email = $1 ", [
-        username,
-      ]);
-      if (result.rows.length > 0) {
-        const user = result.rows[0];
-        const storedHashedPassword = user.password;
-        bcrypt.compare(password, storedHashedPassword, (err, valid) => {
-          if (err) {
-            //Error with password check
-            console.error("Error comparing passwords:", err);
-            return cb(err);
-          } else {
-            if (valid) {
-              //Passed password check
-              return cb(null, user);
+  'local',
+  new Strategy(
+    async function verify(username, password, cb) {
+      try {
+        const result = await db.query('SELECT * FROM users WHERE email = ($1) ',
+        [username]
+        );
+
+        if (result.rows.length > 0) {
+          const user = result.rows[0];
+          const storedHashedPassword = user.password;
+          bcrypt.compare(password, storedHashedPassword, (err, valid) => {
+            if (err) {
+              console.error('Error comparing passwords:', err);
+              return cb(err);
             } else {
-              //Did not pass password check
-              return cb(null, false);
-            }
-          }
-        });
-      } else {
-        return cb("User not found");
-      }
-    } catch (err) {
-      console.log(err);
-    }
+              if (valid) {
+                return cb(null, user);
+              } else {
+                return cb(null, false);
+              };
+            };
+          });
+        } else {
+          return cb('User not found');
+        };
+      } catch (err) {
+        console.log(err);
+      };
   })
 );
 
 passport.use(
   'google',
-    new GoogleStrategy({
-    clientId: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost3000/auth/google/secrets",
-    userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
-  }, async (accessToken, refreshToken, profile, cb) => {
-    console.log(profile);
-  })
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: 'http://localhost:3000/auth/google/secrets',
+      userProfileURL: 'https://www.googleapis.com/oauth2/v3/userinfo'
+    },
+    async (accessToken, refreshToken, profile, cb) => {
+      try {
+        const result = await db.query('SELECT * FROM users WHERE email = ($1)',
+        [profile.email]
+        );
+        if (result.rows.length == 0) {
+          const newUser = await db.query('INSERT INTO users (email, password) VALUES ($1, $2);',
+          [profile.email, 'Google Sign-In']
+          );
+          cb(null, newUser.rows[0]);
+        } else {
+          cb(null, result.rows[0]);
+        };
+      } catch (err) {
+        cb(err);
+      };
+    }
+  )
 );
 
 passport.serializeUser((user, cb) => {
@@ -160,5 +184,5 @@ passport.deserializeUser((user, cb) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+  console.log(`Server running at http://localhost:${port}/`);
 });

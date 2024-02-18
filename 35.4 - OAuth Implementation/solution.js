@@ -20,6 +20,7 @@ app.use(
     saveUninitialized: true,
   })
 );
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
@@ -27,11 +28,11 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 const db = new pg.Client({
-  user: process.env.PG_USER,
-  host: process.env.PG_HOST,
-  database: process.env.PG_DATABASE,
-  password: process.env.PG_PASSWORD,
-  port: process.env.PG_PORT,
+  host: process.env.CLIENT_HOST,
+  user: process.env.CLIENT_USER,
+  password: process.env.CLIENT_PASSWORD,
+  database: process.env.CLIENT_DATABASE,
+  port: process.env.CLIENT_PORT
 });
 db.connect();
 
@@ -190,5 +191,5 @@ passport.deserializeUser((user, cb) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+  console.log(`Server running on port http://localhost:${port}/`);
 });
