@@ -6,23 +6,22 @@ import Form from './components/Form';
 
 const App = () => {
     const [notes, setNotes] = useState([]);
-    const handleClick = (title, content) => {
+    const handleClick = (note) => {
         setNotes([...notes, {
-            title: title,
-            content: content
+            title: note.title,
+            content: note.content
         }]);
-        console.log(notes);
     };
 
     const removeNote = (id) => {
-        setNotes((previous) => previous.filter((note, index) => index + 1 !== id));
+        setNotes((previous) => previous.filter((note, index) => index !== id));
     };
 
     return (
         <>
             <Header />
                 <Form function={handleClick}/>
-                {notes.map((note, index) => <Note key={index + 1} id={index + 1} title={note.title} content={note.content} function={removeNote}/>)}
+                {notes.map((note, index) => <Note key={index} id={index} title={note.title} content={note.content} function={removeNote}/>)}
             <Footer />
         </>
     );

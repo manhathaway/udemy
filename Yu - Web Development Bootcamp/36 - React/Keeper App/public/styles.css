@@ -65,7 +65,7 @@ footer p {
   height: 30px;
   padding-top: 2px;
   border: 0;
-  background-color: rgb(255, 226, 70);
+  background-color: rgb(245, 186, 19);
   cursor: pointer;
   border-radius: 3.5px;
   color: white;
@@ -73,7 +73,7 @@ footer p {
 
 .note button:hover,
 #grid button:hover {
-  background-color: rgb(255, 236, 80);
+  background-color: rgb(255, 196, 29);
 }
 
 #grid {
@@ -86,7 +86,7 @@ footer p {
 #grid button {
   height: 40px;
   border: none;
-  background-color: rgb(255, 226, 70);
+  background-color: rgb(245, 186, 19);
   color: white;
   border-radius: 5px;
 }
