@@ -1,17 +1,17 @@
 import { useState } from "react";
 
 
-export default function CoreConcept({imgSrc, imgAlt, title, desc}) {
+export default function CoreConcept({ imgSrc, imgAlt, title, desc }) {
     const [coordinates, setCoordinates] = useState({
         x: "",
         y: ""
     });
 
-    const {x, y} = coordinates;
+    const { x, y } = coordinates;
 
     const handleMouseOver = (event) => {
         const { screenX, screenY } = event;
-        setCoordinates(previous => {
+        setCoordinates(() => {
             return {
                 x: screenX,
                 y: screenY
