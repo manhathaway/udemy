@@ -6,17 +6,18 @@ const initialGameBoard = [
     [null, null, null]
 ];
 
-export default function GameBoard({onSelectSquare, activePlayerSymbol}) {
+export default function GameBoard({nextTurn, activePlayerSymbol}) {
     const [gameBoard, setGameBoard] = useState(initialGameBoard);
     
     const handleClick = (row, col) => {
         setGameBoard(previous => {
-            const newGameBoard = [...previous.map(innerArray => [...innerArray])];
-            newGameBoard[row][col] = activePlayerSymbol;
-            return newGameBoard;
+            const updatedBoard = [...previous.map(innerArray => [...innerArray])];
+            if (typeof updatedBoard[row][col] !== 'string') {
+                updatedBoard[row][col] = activePlayerSymbol;
+                nextTurn();
+            };
+            return updatedBoard;
         });
-
-        onSelectSquare();
     };
 
     return (
