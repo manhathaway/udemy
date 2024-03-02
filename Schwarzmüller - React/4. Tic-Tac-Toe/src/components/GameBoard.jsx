@@ -1,32 +1,40 @@
-import { useState } from 'react';
-
 const initialGameBoard = [
     [null, null, null],
     [null, null, null],
     [null, null, null]
 ];
 
-export default function GameBoard({nextTurn, activePlayerSymbol}) {
-    const [gameBoard, setGameBoard] = useState(initialGameBoard);
-    
+const GameBoard = ({nextTurn, gameTurns}) => {
+    let gameBoard = initialGameBoard;
+
+    for (const turn of gameTurns) {
+        const {square, player} = turn;
+        const {row, col} = square;
+
+        gameBoard[row][col] = player;
+    }
+/*  
     const handleClick = (row, col) => {
-        setGameBoard(previous => {
-            const updatedBoard = [...previous.map(innerArray => [...innerArray])];
+        setGameBoard(previousRows => {
+            const updatedBoard = [...previousRows.map(previousCols => [...previousCols])];
             if (typeof updatedBoard[row][col] !== 'string') {
-                updatedBoard[row][col] = activePlayerSymbol;
+                updatedBoard[row][col] = activePlayer;
                 nextTurn();
             };
             return updatedBoard;
         });
     };
+*/
 
     return (
         <ol id='game-board'>
             {gameBoard.map((row, rowIndex) => <li key={rowIndex}>
                 <ol>
-                    {row.map((symbol, colIndex) => <li key={colIndex}><button onClick={() => handleClick(rowIndex, colIndex)}>{symbol}</button></li>)}
+                    {row.map((symbol, colIndex) => <li key={colIndex}><button onClick={() => nextTurn(rowIndex, colIndex)}>{symbol}</button></li>)}
                 </ol>
             </li>)}
         </ol>
     );
 };
+
+export default GameBoard;

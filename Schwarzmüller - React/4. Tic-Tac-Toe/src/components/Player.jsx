@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function Player({initialName, symbol, isActive}) {
+const Player = ({initialName, symbol, isActive}) => {
     const [edit, setEdit] = useState(false);
     const [name, setName] = useState(initialName)
     
@@ -10,8 +10,7 @@ export default function Player({initialName, symbol, isActive}) {
     };
 
     const handleClick = () => {
-        name.length > 0 &&
-            setEdit(previous => !previous)
+        name.length > 0 && setEdit(previous => !previous)
     };
     
     let playerName;
@@ -30,3 +29,5 @@ export default function Player({initialName, symbol, isActive}) {
         </li>
     );
 };
+
+export default Player;
