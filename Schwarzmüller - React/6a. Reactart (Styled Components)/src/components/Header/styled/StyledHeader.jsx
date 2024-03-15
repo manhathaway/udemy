@@ -1,5 +1,4 @@
 import { styled } from 'styled-components';
-import logo from '../assets/logo.png';
 
 const StyledHeader = styled.header`
   display: flex;
@@ -40,15 +39,6 @@ const StyledHeader = styled.header`
       font-size: 2.25rem;
     }
   }
-  
 `;
 
-export default function Header() {
-  return (
-    <StyledHeader>
-      <img src={logo} alt="A canvas" />
-      <h1>ReactArt</h1>
-      <p>A community of artists and art-lovers.</p>
-    </StyledHeader>
-  );
-}
+export default StyledHeader;
