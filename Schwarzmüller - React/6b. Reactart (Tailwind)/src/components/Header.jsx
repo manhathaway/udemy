@@ -1,13 +1,11 @@
-import logo from '../../assets/logo.png';
-
-import StyledHeader from './styled/StyledHeader';
+import logo from '../assets/logo.png';
 
 export default function Header() {
   return (
-    <StyledHeader>
+    <header className="flex flex-col items-center mt-8 mb-16">
       <img src={logo} alt="A canvas" />
       <h1>ReactArt</h1>
       <p>A community of artists and art-lovers.</p>
-    </StyledHeader>
+    </header>
   );
 }
