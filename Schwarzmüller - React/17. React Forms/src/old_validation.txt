@@ -1,0 +1,26 @@
+if (Object.entries(inputs.isValidated).length == 2) {
+  if (Object.values(inputs.isValidated).includes(false)) {
+    let invalidInputs = [];
+    for (const [key, value] of Object.entries(inputs.isValidated)) {
+      if (value === false) {
+        invalidInputs.push(key)
+      };
+    };
+    setWarning({
+      hasWarning: true,
+      message: `The following inputs need fixing: ${invalidInputs}`
+    });
+  } else {
+    setWarning({
+      hasWarning: false,
+      message: ''
+    });
+
+    alert('Form submitted.');
+  };
+} else {
+  setWarning({
+    hasWarning: true,
+    message: `Please fill out all fields.`
+  });
+};

@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import ResultModal from './ResultModal';
 
 const TimerChallenge = ({ title, targetTime }) => {
@@ -6,6 +6,10 @@ const TimerChallenge = ({ title, targetTime }) => {
     const timerIsActive = runningTimer > 0 && runningTimer <= targetTime * 1000; 
     const timer = useRef();
     const dialog = useRef();
+
+    useEffect(() => {
+        console.log('TimerChallenge rendered.');
+    }, [])
     
     const handleStart = () => {
         timer.current = setInterval(() => {
