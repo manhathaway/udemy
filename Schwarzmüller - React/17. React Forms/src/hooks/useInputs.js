@@ -36,18 +36,21 @@ const useInputs = ({ onPageChange }) => {
                 [name]: value
             }
         }));
-
-        console.log(inputs);
     };
 
-    const handleSubmit = (length) => {
-        if (
+    const handleSubmit = (length, extraCondition) => {
+        let condition =
             Object.entries(inputs.isValidated).length == length
             && !Object.values(inputs.isValidated).includes(false)
-            && !Object.values(inputs.isValidated).includes(undefined)
-        ) {
+            && !Object.values(inputs.isValidated).includes(undefined);
+        
+        if (typeof extraCondition === 'boolean') {
+            condition = condition && extraCondition;
+        };
+        
+        if (condition) {
             setInputs(previous => ({ ...previous, formIsValidated: true }));
-            console.log(inputs);
+            console.log(inputs.formData);
         } else {
             setInputs(previous => ({ ...previous, formIsValidated: false }));
         };

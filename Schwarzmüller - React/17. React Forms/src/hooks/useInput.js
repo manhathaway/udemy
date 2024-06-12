@@ -3,8 +3,7 @@ import { useState, useEffect, useRef } from "react";
 const useInput = ({ formattedLabel, resetInput, onValidation }) => {
     const [input, setInput] = useState({
         name: formattedLabel,
-        value: '',
-        isBlurred: false
+        value: ''
     });
     const isValidated = useRef();
 
@@ -12,8 +11,7 @@ const useInput = ({ formattedLabel, resetInput, onValidation }) => {
         if (resetInput) {
             setInput({
                 name: formattedLabel,
-                value: '',
-                isBlurred: false
+                value: ''
             });
         };
     }, [resetInput]);
@@ -34,17 +32,18 @@ const useInput = ({ formattedLabel, resetInput, onValidation }) => {
     };
     
     const handleBlur = () => {
-        setInput(previous => ({
-            ...previous,
-            isBlurred: true
-        }));
-        
         switch (input.name) {
             case 'Email':
                 checkInput(input.value.includes('@') && input.value.includes('.'));
                 break;
             case 'Password':
+            case 'ConfirmPassword':
+            case 'Reference':
                 checkInput(input.value.length !== 0);
+                break;
+            case 'FirstName':
+            case 'LastName':
+                checkInput(input.value.length !== 0 && input.value.match(/^[A-Za-z]*$/));
                 break;
         };
 

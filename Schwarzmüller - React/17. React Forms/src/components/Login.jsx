@@ -14,18 +14,19 @@ export default function Login({ onPageChange }) {
   return (
     <Form
       title='Login'
+      linkTitle="Don't have an account?"
       inputs={inputs}
       onPageChange={() => handlePageChange('signup')}
-      onSubmit={() => handleSubmit(2)}
+      onSubmit={() => handleSubmit(2, undefined)}
       onReset={handleReset}
     >
-      <div className="control-row">
+      <div style={{display: 'flex', gap: '10px', marginTop: '15px'}}>
         <Input
           type='email'
           label='Email'
           resetInput={inputs.isReset}
           onValidation={handleValidation}
-          response={inputs.isValidated.Email ?? undefined}
+          condition={inputs.isValidated.Email ?? undefined}
         />
 
         <Input
@@ -33,7 +34,7 @@ export default function Login({ onPageChange }) {
           label='Password'
           resetInput={inputs.isReset}
           onValidation={handleValidation}
-          response={inputs.isValidated.Password ?? undefined}
+          condition={inputs.isValidated.Password ?? undefined}
         />
       </div>
     </Form>
